@@ -1,0 +1,23 @@
+# 签名密钥 / 签名产物（严禁提交）
+*.keystore
+*.jks
+*.idsig
+*.apk
+*.aab
+
+# 构建中间产物
+build/
+aligned*.apk
+*.tmp
+*.norm
+raw_*.mp3
+
+# 调试与临时文件
+debug*.js
+test_*.js
+*.pyc
+__pycache__/
+
+# 系统文件
+.DS_Store
+Thumbs.db

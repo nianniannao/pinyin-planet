@@ -1,0 +1,220 @@
+/* =============================================================
+   拼音小星球 · 外壳适配层（在全屏 App / 平板 / 刘海屏下使用）
+   加载顺序：style.css → shell.css
+   ============================================================= */
+
+/* ---------- 1. 安全区变量：浏览器用 env()，原生容器用 JS 注入覆盖 ---------- */
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --stage-max: 760px;
+  --edge: 16px;
+}
+
+/* ---------- 2. 全屏铺满，杜绝黑边 / 白边 ---------- */
+html {
+  height: 100%;
+  background: #FFF7EC;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  /* 原生容器里不产生回弹，避免顶部露出底色 */
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 手写板要吃掉触摸事件 */
+canvas,
+.pad-canvas {
+  touch-action: none;
+}
+
+/* 长按不弹菜单、不选中文字（儿童误触保护） */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-drag: none;
+}
+
+img,
+svg {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ---------- 3. 主体：铺满 + 安全区留白 ---------- */
+#stage {
+  max-width: var(--stage-max);
+  margin: 0 auto;
+  padding:
+    calc(var(--sat) + 12px)
+    calc(var(--edge) + var(--sar))
+    calc(var(--sab) + 34px)
+    calc(var(--edge) + var(--sal));
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* 悬浮提示避开底部手势条 */
+#toast {
+  bottom: calc(var(--sab) + 30px);
+}
+
+/* 语音提示条避开刘海 */
+.voice-warn {
+  top: calc(var(--sat) + 10px);
+}
+
+/* ---------- 4. 平板：加大尺寸、扩展栅格 ---------- */
+@media (min-width: 820px) {
+  :root {
+    --stage-max: 1040px;
+    --edge: 26px;
+  }
+
+  .hero {
+    padding: 26px 24px;
+    border-radius: 30px;
+    gap: 20px;
+  }
+  .hero h1 { font-size: 30px; }
+  .hero-hi { font-size: 15px; }
+  .hero-sub { font-size: 15px; }
+  .ring-wrap, .ring { width: 128px; height: 128px; }
+  .ring-label b { font-size: 26px; }
+  .ring-label span { font-size: 11px; }
+
+  .action-grid { gap: 14px; }
+  .action-card { padding: 20px 10px 16px; border-radius: 24px; }
+  .ac-emoji { font-size: 34px; }
+  .action-card b { font-size: 20px; }
+  .action-card em { font-size: 12px; }
+
+  .block-title { font-size: 20px; }
+  .block-title span { font-size: 13px; }
+
+  .type-card { padding: 18px 16px; border-radius: 22px; }
+  .tc-name { font-size: 19px; }
+  .tc-sub { font-size: 12px; }
+  .tc-progress { font-size: 13px; }
+
+  .letter-grid { grid-template-columns: repeat(8, 1fr); gap: 12px; }
+  .letter-grid.big { grid-template-columns: repeat(6, 1fr); gap: 13px; }
+  .tile { border-radius: 20px; }
+  .tile b { font-size: 30px; }
+  .tile.tile-lg b { font-size: 40px; }
+  .tile.len2 b { font-size: 24px; }
+  .tile.len3 b { font-size: 19px; }
+  .tile.len4 b { font-size: 16px; }
+  .tile.tile-lg.len2 b { font-size: 30px; }
+  .tile.tile-lg.len3 b { font-size: 23px; }
+  .tile.tile-lg.len4 b { font-size: 19px; }
+
+  .lesson-hero { padding: 22px; border-radius: 30px; gap: 20px; }
+  .letter-stage { height: clamp(260px, 32vw, 420px); border-radius: 22px; }
+  .hero-side { width: 168px; gap: 12px; }
+  .play-btn { font-size: 18px; padding: 16px 10px; }
+  .play-btn span { font-size: 28px; }
+  .wc-emoji { font-size: 40px; }
+  .wc-text b { font-size: 24px; }
+  .wc-text i { font-size: 16px; }
+
+  .tabs { padding: 6px; border-radius: 18px; }
+  .tab { font-size: 18px; padding: 14px 0; border-radius: 14px; }
+
+  .card { padding: 22px; border-radius: 24px; margin-bottom: 16px; }
+  .card-title { font-size: 19px; }
+  .card-sub { font-size: 14px; }
+
+  .sound-row { gap: 12px; }
+  .sound-btn { padding: 16px 8px; font-size: 13px; border-radius: 20px; }
+  .sound-btn b { font-size: 19px; }
+  .koujue { font-size: 19px; padding: 14px; }
+
+  .tone-btn { padding: 14px 6px; border-radius: 20px; }
+  .tone-btn b { font-size: 30px; }
+  .tone-btn i { font-size: 16px; }
+
+  .spell-item { padding: 16px 20px; border-radius: 18px; gap: 12px; }
+  .si-sm, .si-ym, .si-whole { font-size: 26px; }
+  .si-op { font-size: 17px; }
+  .si-char { font-size: 22px; width: 36px; }
+
+  .rec-btn { padding: 20px; font-size: 18px; }
+  .rec-btn span { font-size: 28px; }
+  .mini-btn { font-size: 14px; padding: 12px 16px; }
+
+  .gs { font-size: 15px; padding: 11px 0; }
+  .pad-tip, .rec-status { font-size: 13px; }
+
+  .game-card { padding: 22px; grid-template-columns: 56px 1fr; border-radius: 24px; }
+  .game-card span { font-size: 38px; }
+  .game-card b { font-size: 20px; }
+  .game-card em { font-size: 13px; }
+
+  .seg-item { font-size: 16px; padding: 12px 0; }
+  .speaker-big { padding: 30px; }
+  .speaker-big span { font-size: 56px; }
+  .opt-card { padding: 36px 0; }
+  .opt-card b { font-size: 46px; }
+  .tone-opt { padding: 24px 0; }
+  .tone-opt b { font-size: 34px; }
+  .tone-opt i { font-size: 18px; }
+
+  .mole-grid { gap: 16px; }
+  .mole { font-size: 36px; }
+
+  .tone-mascots { gap: 16px; }
+  .tm svg { max-width: 84px; height: 46px; }
+  .tm b { font-size: 28px; }
+  .tm em { font-size: 12px; }
+
+  .about p { font-size: 14px; }
+  .btn { font-size: 16px; padding: 15px 20px; }
+}
+
+/* ---------- 5. 大平板 / 横屏：进一步加宽 ---------- */
+@media (min-width: 1180px) {
+  :root {
+    --stage-max: 1180px;
+    --edge: 34px;
+  }
+  .letter-grid { grid-template-columns: repeat(10, 1fr); }
+  .letter-grid.big { grid-template-columns: repeat(7, 1fr); }
+  .letter-stage { height: clamp(300px, 30vw, 460px); }
+}
+
+/* ---------- 6. 横屏手机：压低高度，保证一屏看到关键内容 ---------- */
+@media (orientation: landscape) and (max-height: 520px) {
+  .hero { padding: 12px 16px; margin-bottom: 12px; }
+  .hero h1 { font-size: 18px; }
+  .ring-wrap, .ring { width: 72px; height: 72px; }
+  .letter-stage { height: clamp(150px, 46vh, 230px); }
+  .lesson-hero { padding: 10px; }
+  #stage { padding-top: calc(var(--sat) + 8px); }
+}
+
+/* ---------- 7. 老 WebView 兜底 ---------- */
+@supports not (aspect-ratio: 1 / 1) {
+  .tile { min-height: 62px; }
+  .hole { min-height: 84px; }
+}
+
+/* 动效跟随系统设置 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
